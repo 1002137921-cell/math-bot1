@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מתמAIקה – מורה דיגיטלי 5 יח"ל</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},startup:{typeset:false}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#07090f;--s1:#0d1117;--s2:#111827;--s3:#1a2236;
+  --border:#1e3050;--blue:#3b82f6;--purple:#8b5cf6;
+  --green:#10b981;--gold:#f59e0b;--red:#ef4444;--cyan:#06b6d4;
+  --text:#e2e8f0;--t2:#94a3b8;--t3:#4b6080;
+  --gB:0 0 22px rgba(59,130,246,.35);--gG:0 0 18px rgba(16,185,129,.3)
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(59,130,246,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.025) 1px,transparent 1px);background-size:44px 44px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 55% at 50% -10%,rgba(59,130,246,.09),transparent 70%)}
+.hdr{position:relative;z-index:20;height:60px;padding:0 20px;background:rgba(13,17,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px}
+.lmark{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;box-shadow:var(--gB)}
+.lname{font-size:21px;font-weight:900;letter-spacing:-.5px}
+.lname em{color:var(--blue);font-style:normal}
+.lsub{font-size:11px;color:var(--t3);margin-top:1px}
+.hbadge{margin-right:auto;padding:5px 14px;border-radius:20px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);font-size:12px;font-weight:700;color:var(--gold)}
+.hlvl{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2)}
+.ldot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:var(--gG);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.layout{flex:1;display:grid;grid-template-columns:268px 1fr;overflow:hidden;position:relative;z-index:5}
+.sidebar{background:var(--s1);border-left:1px solid var(--border);overflow-y:auto;padding:10px 8px;display:flex;flex-direction:column;gap:2px}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.ssec{font-size:9.5px;font-weight:800;color:var(--t3);letter-spacing:2px;text-transform:uppercase;padding:10px 8px 5px;margin-top:4px}
+.ssep{height:1px;background:var(--border);margin:5px 4px}
+.sbtn{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:9px;border:1px solid transparent;background:transparent;color:var(--t2);cursor:pointer;font-family:'Heebo',sans-serif;font-size:13px;text-align:right;width:100%;transition:all .18s}
+.sbtn:hover{background:var(--s2);border-color:var(--border);color:var(--text)}
+.sbtn.act{background:rgba(59,130,246,.13);border-color:rgba(59,130,246,.38);color:var(--blue);box-shadow:var(--gB)}
+.si{font-size:15px;flex-shrink:0}
+.stag{margin-right:auto;font-size:9px;padding:1px 6px;border-radius:4px;font-weight:800;flex-shrink:0}
+.tb{background:rgba(16,185,129,.15);color:var(--green)}
+.tm{background:rgba(59,130,246,.15);color:var(--blue)}
+.th{background:rgba(139,92,246,.15);color:var(--purple)}
+.tx{background:rgba(245,158,11,.15);color:var(--gold)}
+.cwrap{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.cscroll{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px;scroll-behavior:smooth}
+.cscroll::-webkit-scrollbar{width:5px}
+.cscroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.msg{display:flex;gap:12px;animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse}
+.av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.msg.bot .av{background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:var(--gB)}
+.msg.user .av{background:var(--s3);border:1px solid var(--border)}
+.bub{padding:12px 17px;border-radius:14px;font-size:14.5px;line-height:1.8;max-width:700px}
+.msg.bot .bub{background:var(--s2);border:1px solid var(--border);border-top-right-radius:3px}
+.msg.user .bub{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(139,92,246,.18));border:1px solid rgba(59,130,246,.28);border-top-left-radius:3px;text-align:right}
+.card{background:var(--s3);border:1px solid var(--border);border-radius:11px;padding:14px 18px;margin:10px 0;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--blue),var(--purple))}
+.card-label{font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.formula{background:rgba(0,0,0,.45);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:12px 18px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--gold);text-align:center;margin:8px 0;direction:ltr;line-height:1.9}
+.steps{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.step{display:flex;gap:10px;align-items:flex-start;background:var(--s3);border:1px solid var(--border);border-radius:9px;padding:10px 14px;animation:rise .3s ease both}
+.stepn{min-width:26px;height:26px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0}
+.stept{font-size:14px;line-height:1.7}
+.quiz{background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(139,92,246,.06));border:1px solid rgba(139,92,246,.3);border-radius:13px;padding:16px 20px;margin:10px 0}
+.qlbl{font-size:10px;font-weight:900;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.qq{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.55}
+.qopts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--s2);cursor:pointer;font-size:13.5px;font-family:'Heebo',sans-serif;text-align:right;width:100%;color:var(--text);transition:all .18s}
+.opt:hover:not(:disabled){border-color:var(--purple);background:rgba(139,92,246,.1);color:var(--purple)}
+.opt.ok{border-color:var(--green)!important;background:rgba(16,185,129,.12)!important;color:var(--green)!important;pointer-events:none}
+.opt.bad{border-color:var(--red)!important;background:rgba(239,68,68,.1)!important;color:var(--red)!important;pointer-events:none}
+.ol{width:22px;height:22px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.fb{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13.5px;line-height:1.6;display:none}
+.fb.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;display:block}
+.fb.bad{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.28);color:#fca5a5;display:block}
+.hint{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.22);border-radius:9px;padding:11px 15px;margin:8px 0;display:flex;gap:9px;align-items:flex-start}
+.hintt{font-size:13.5px;line-height:1.65;color:#fcd34d}
+.bagrut{background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(239,68,68,.05));border:1px solid rgba(245,158,11,.28);border-radius:13px;padding:16px 20px;margin:10px 0}
+.blbl{font-size:10px;font-weight:900;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.bpts{font-size:11px;padding:2px 9px;background:rgba(245,158,11,.1);border-radius:5px;display:inline-block;margin-bottom:8px;color:var(--gold)}
+.bq{font-size:15px;font-weight:700;line-height:1.6;margin-bottom:10px}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.wcard{background:var(--s3);border:1px solid var(--border);border-radius:10px;padding:13px 15px;cursor:pointer;transition:all .2s;text-align:center}
+.wcard:hover{border-color:var(--blue);box-shadow:var(--gB);transform:translateY(-2px)}
+.wci{font-size:22px;margin-bottom:6px}
+.wct{font-size:13px;font-weight:700;margin-bottom:3px}
+.wcs{font-size:11px;color:var(--t2)}
+.tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
+.tbl th{background:var(--s3);padding:7px 12px;text-align:center;border:1px solid var(--border);font-weight:700;color:var(--blue)}
+.tbl td{padding:6px 12px;border:1px solid var(--border);text-align:center}
+.tbl tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+
+/* ═══════════ VISUAL ELEMENTS (new) ═══════════ */
+
+/* Canvas drawing wrapper */
+.canvas-wrap{
+  background:var(--s3);border:1px solid var(--border);border-radius:12px;
+  padding:14px;margin:12px 0;position:relative;overflow:hidden
+}
+.canvas-title{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.canvas-title::after{content:'LIVE';font-size:9px;padding:1px 6px;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.3);border-radius:4px;color:var(--cyan)}
+.canvas-wrap canvas{border-radius:8px;display:block;max-width:100%}
+.canvas-controls{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ctrl-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--s2);color:var(--t2);cursor:pointer;font-family:'Heebo',sans-serif;font-size:12px;transition:all .18s}
+.ctrl-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.08)}
+.ctrl-btn.active-ctrl{border-color:var(--blue);color:var(--blue);background:rgba(59,130,246,.1)}
+.param-row{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+.param-row label{font-size:12px;color:var(--t2)}
+.param-row input[type=range]{flex:1;min-width:80px;accent-color:var(--blue);cursor:pointer}
+.param-val{font-size:12px;font-weight:700;color:var(--gold);min-width:36px;text-align:center}
+
+/* YouTube embed */
+.yt-wrap{
+  background:var(--s3);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;margin:12px 0;position:relative
+}
+.yt-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.yt-icon{width:32px;height:32px;background:#ff0000;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.yt-info{}
+.yt-title{font-size:13px;font-weight:700;color:var(--text)}
+.yt-sub{font-size:11px;color:var(--t3)}
+.yt-iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.yt-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;background:rgba(255,0,0,.12);border:1px solid rgba(255,0,0,.25);color:#f87171;margin-bottom:6px}
+
+/* GeoGebra iframe */
+.ggb-wrap{
+  background:var(--s3);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;margin:12px 0
+}
+.ggb-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.ggb-icon{width:32px;height:32px;background:linear-gradient(135deg,#1565c0,#42a5f5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ggb-title{font-size:13px;font-weight:700}
+.ggb-iframe{width:100%;height:400px;border:none;display:block}
+
+/* Animated SVG diagram */
+.svg-anim{background:var(--s3);border:1px solid var(--border);border-radius:12px;padding:16px;margin:12px 0;text-align:center}
+.svg-anim svg{max-width:100%;overflow:visible}
+
+/* Chart.js wrapper */
+.chart-wrap{
+  background:var(--s3);border:1px solid var(--border);border-radius:12px;
+  padding:16px;margin:12px 0
+}
+.chart-title{font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.chart-wrap canvas{border-radius:8px}
+
+/* PROGRESS & INPUT (unchanged) */
+.pbar{padding:7px 26px;border-top:1px solid var(--border);background:rgba(13,17,23,.88);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.plbl{font-size:11px;color:var(--t3);white-space:nowrap}
+.ptrack{flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.ppts{font-size:12px;font-weight:700;color:var(--green);white-space:nowrap}
+.pstreak{font-size:11px;color:var(--gold);white-space:nowrap}
+.qrow{display:flex;flex-wrap:wrap;gap:7px;padding:0 26px 9px;flex-shrink:0}
+.qb{padding:6px 13px;border-radius:18px;border:1px solid var(--border);background:var(--s2);color:var(--t2);cursor:pointer;font-family:'Heebo',sans-serif;font-size:12.5px;transition:all .18s}
+.qb:hover{border-color:var(--blue);color:var(--blue);background:rgba(59,130,246,.08);transform:translateY(-2px);box-shadow:var(--gB)}
+.iarea{padding:11px 26px 15px;border-top:1px solid var(--border);background:rgba(13,17,23,.97);backdrop-filter:blur(20px);flex-shrink:0}
+.ibox{display:flex;gap:9px;align-items:flex-end;background:var(--s2);border:1px solid var(--border);border-radius:13px;padding:9px 13px;transition:border-color .2s}
+.ibox:focus-within{border-color:var(--blue);box-shadow:var(--gB)}
+#ui{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Heebo',sans-serif;font-size:14.5px;resize:none;min-height:24px;max-height:110px;line-height:1.5;padding-top:2px}
+#ui::placeholder{color:var(--t3)}
+#sb{width:38px;height:38px;flex-shrink:0;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .18s;box-shadow:var(--gB)}
+#sb:hover{transform:scale(1.06);filter:brightness(1.1)}
+#sb:active{transform:scale(.95)}
+#sb:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.typing{display:flex;gap:5px;align-items:center;padding:4px 0}
+.td{width:7px;height:7px;border-radius:50%;animation:tdance 1.1s ease infinite}
+.td:nth-child(1){background:var(--blue)}
+.td:nth-child(2){background:var(--purple);animation-delay:.18s}
+.td:nth-child(3){background:var(--cyan);animation-delay:.36s}
+@keyframes tdance{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-7px);opacity:1}}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <div class="lmark">∑</div>
+    <div><div class="lname">מתמ<em>AI</em>קה</div><div class="lsub">מורה דיגיטלי · תכנית לימודים 5 יח"ל תשפ"ו · גרפים + סרטונים</div></div>
+  </div>
+  <div class="hbadge">⭐ 5 יחידות לימוד</div>
+  <div class="hlvl"><div class="ldot"></div><span id="lvl">מתחיל</span></div>
+</header>
+
+<div class="layout">
+<div class="sidebar">
+  <div class="ssec">כיתה י׳</div>
+  <button class="sbtn" onclick="topicClick(this,'sequences_arith')"><span class="si">📈</span>סדרות חשבוניות<span class="stag tb">בסיס</span></button>
+  <button class="sbtn" onclick="topicClick(this,'sequences_geo')"><span class="si">💹</span>סדרות הנדסיות<span class="stag tm">בינוני</span></button>
+  <button class="sbtn" onclick="topicClick(this,'analytic_intro')"><span class="si">📐</span>הנדסה אנליטית<span class="stag tm">בינוני</span></button>
+  <button class="sbtn" onclick="topicClick(this,'functions_intro')"><span class="si">📊</span>פונקציות – מבוא<span class="stag tm">בינוני</span></button>
+  <button class="sbtn" onclick="topicClick(this,'derivative_basic')"><span class="si">📉</span>נגזרת – יסודות<span class="stag tm">בינוני</span></button>
+  <button class="sbtn" onclick="topicClick(this,'trig_intro')"><span class="si">⭕</span>טריגונומטריה<span class="stag tm">בינוני</span></button>
+  <button class="sbtn" onclick="topicClick(this,'geometry_y10')"><span class="si">📏</span>גאומטריה אוקלידית<span class="stag tm">בינוני</span></button>
+  <div class="ssep"></div>
+  <div class="ssec">כיתה י"א</div>
+  <button class="sbtn" onclick="topicClick(this,'derivative_adv')"><span class="si">🔬</span>נגזרת שנייה, קעירות<span class="stag th">מתקדם</span></button>
+  <button class="sbtn" onclick="topicClick(this,'integral')"><span class="si">∫</span>אינטגרל<span class="stag th">מתקדם</span></button>
+  <button class="sbtn" onclick="topicClick(this,'probability')"><span class="si">🎲</span>הסתברות<span class="stag th">מתקדם</span></button>
+  <button class="sbtn" onclick="topicClick(this,'vectors')"><span class="si">↗️</span>וקטורים<span class="stag th">מתקדם</span></button>
+  <div class="ssep"></div>
+  <div class="ssec">כיתה י"ב</div>
+  <button class="sbtn" onclick="topicClick(this,'conics')"><span class="si">🔵</span>חרוטים<span class="stag tx">מתקדם+</span></button>
+  <button class="sbtn" onclick="topicClick(this,'exp_log')"><span class="si">💥</span>מעריכיות ולוגריתמים<span class="stag tx">מתקדם+</span></button>
+  <button class="sbtn" onclick="topicClick(this,'complex')"><span class="si">ℂ</span>מספרים מרוכבים<span class="stag tx">מתקדם+</span></button>
+  <div class="ssep"></div>
+  <div class="ssec">ויזואלי אינטראקטיבי</div>
+  <button class="sbtn" onclick="showViz('derivative_anim')"><span class="si">🎬</span>אנימציה: נגזרת<span class="stag tm">ויז'</span></button>
+  <button class="sbtn" onclick="showViz('trig_anim')"><span class="si">🎬</span>אנימציה: מעגל יחידה<span class="stag tm">ויז'</span></button>
+  <button class="sbtn" onclick="showViz('integral_anim')"><span class="si">🎬</span>אנימציה: שטח תחת גרף<span class="stag th">ויז'</span></button>
+  <button class="sbtn" onclick="showViz('sequences_chart')"><span class="si">📊</span>גרף: סדרות<span class="stag tb">ויז'</span></button>
+  <div class="ssep"></div>
+  <div class="ssec">סרטונים</div>
+  <button class="sbtn" onclick="showVideo('derivative_yt')"><span class="si">▶️</span>סרטון: נגזרת<span class="stag tm">YouTube</span></button>
+  <button class="sbtn" onclick="showVideo('integral_yt')"><span class="si">▶️</span>סרטון: אינטגרל<span class="stag th">YouTube</span></button>
+  <button class="sbtn" onclick="showVideo('trig_yt')"><span class="si">▶️</span>סרטון: טריגונומטריה<span class="stag tm">YouTube</span></button>
+  <button class="sbtn" onclick="showVideo('sequences_yt')"><span class="si">▶️</span>סרטון: סדרות<span class="stag tb">YouTube</span></button>
+  <div class="ssep"></div>
+  <div class="ssec">בגרות</div>
+  <button class="sbtn" onclick="topicClick(this,'bagrut')"><span class="si">📋</span>שאלת בגרות<span class="stag tx">בגרות</span></button>
+  <button class="sbtn" onclick="topicClick(this,'diagnose')"><span class="si">⚡</span>אבחון רמה<span class="stag tx">בגרות</span></button>
+</div>
+
+<div class="cwrap">
+  <div class="cscroll" id="cs">
+    <div class="msg bot">
+      <div class="av">🎓</div>
+      <div class="bub">
+        <strong>שלום! אני המורה הדיגיטלי שלך למתמטיקה 5 יחידות לימוד 🎯</strong><br><br>
+        עכשיו עם <strong>גרפים אינטראקטיביים, אנימציות וסרטוני הסבר</strong> — הכל בנוי לפי תכנית הלימודים הרשמית תשפ"ו.
+        <div class="card" style="margin-top:12px">
+          <div class="card-label">✨ יכולות חדשות</div>
+          <div class="steps">
+            <div class="step"><div class="stepn">🎬</div><div class="stept"><strong>אנימציות אינטראקטיביות</strong> — הזזת פרמטרים וצפייה בשינוי הגרף בזמן אמת</div></div>
+            <div class="step"><div class="stepn">▶️</div><div class="stept"><strong>סרטוני הסבר מובחרים</strong> — סרטוני YouTube בעברית לכל נושא</div></div>
+            <div class="step"><div class="stepn">📊</div><div class="stept"><strong>גרפים דינמיים</strong> — ויזואליזציה של פונקציות, סדרות ושטחים</div></div>
+            <div class="step"><div class="stepn">🖊️</div><div class="stept"><strong>שרטוטים גאומטריים</strong> — דיאגרמות אנימציה של משפטים מתמטיים</div></div>
+          </div>
+        </div>
+        <div class="wgrid">
+          <div class="wcard" onclick="showViz('derivative_anim')"><div class="wci">🎬</div><div class="wct">אנימציה: נגזרת</div><div class="wcs">ראה את המשיק נע</div></div>
+          <div class="wcard" onclick="showViz('trig_anim')"><div class="wci">⭕</div><div class="wct">מעגל היחידה</div><div class="wcs">אנימציה אינטראקטיבית</div></div>
+          <div class="wcard" onclick="showViz('integral_anim')"><div class="wci">∫</div><div class="wct">שטח תחת גרף</div><div class="wcs">הסבר ויזואלי</div></div>
+          <div class="wcard" onclick="sendMsg('הסבר לי נגזרת עם גרפים ואנימציה')"><div class="wci">📉</div><div class="wct">שאל שאלה</div><div class="wcs">קבל הסבר ויזואלי</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pbar">
+    <span class="plbl">התקדמות</span>
+    <div class="ptrack"><div class="pfill" id="pf" style="width:1%"></div></div>
+    <span class="ppts" id="pp">0 נק'</span>
+    <span class="pstreak" id="ps">🔥 0 רצף</span>
+  </div>
+  <div class="qrow">
+    <button class="qb" onclick="sendMsg('הסבר שוב עם גרף ואנימציה')">🎬 עם גרף</button>
+    <button class="qb" onclick="sendMsg('תן לי תרגיל קל')">📝 תרגיל קל</button>
+    <button class="qb" onclick="sendMsg('תן לי תרגיל קשה')">🔥 אתגר</button>
+    <button class="qb" onclick="sendMsg('תן לי שאלת בגרות')">📋 בגרות</button>
+    <button class="qb" onclick="sendMsg('מה הנוסחאות החשובות?')">📌 נוסחאות</button>
+  </div>
+  <div class="iarea">
+    <div class="ibox">
+      <textarea id="ui" placeholder="שאל אותי כל שאלה... אקבל גם גרפים ואנימציות!" rows="1" onkeydown="hk(event)" oninput="ag(this)"></textarea>
+      <button id="sb" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const ST={pts:0,streak:0,hist:[],chartInstances:{}};
+
+// ══════════════════════════════════════════
+// VIDEO DATABASE — curated Hebrew math videos
+// ══════════════════════════════════════════
+const VIDEOS = {
+  derivative_yt: {
+    title: 'נגזרת – מבוא והגדרה',
+    sub: 'ערוץ מתמטיקה 5 יח"ל',
+    id: 'WsQTyUrxUsE',
+    desc: 'הסבר מלא על נגזרת כקצב שינוי, הגדרה כגבול ופירוש גאומטרי'
+  },
+  integral_yt: {
+    title: 'אינטגרל מסוים – שטחים',
+    sub: 'ערוץ מתמטיקה 5 יח"ל',
+    id: 'rfG8ce4nNh0',
+    desc: 'המשפט היסודי של החשבון, פונקציה קדומה וחישוב שטחים'
+  },
+  trig_yt: {
+    title: 'פונקציות טריגונומטריות – מעגל היחידה',
+    sub: 'ערוץ מתמטיקה 5 יח"ל',
+    id: 'yBw67Fb31Cs',
+    desc: 'הגדרת sin, cos, tan על מעגל היחידה, מחזוריות וגרפים'
+  },
+  sequences_yt: {
+    title: 'סדרות חשבוניות והנדסיות',
+    sub: 'ערוץ מתמטיקה 5 יח"ל',
+    id: 'XZJdyPkQ9IA',
+    desc: 'נוסחת איבר כללי, נוסחת סכום, גבול סדרה הנדסית'
+  }
+};
+
+// ══════════════════════════════════════════
+// SYSTEM PROMPT
+// ══════════════════════════════════════════
+const SYS=`אתה מורה מצטיין למתמטיקה ברמת 5 יחידות לימוד בישראל.
+אתה מלמד לפי תכנית הלימודים הרשמית תשפ"ו.
+כיתה י: סדרות, הנדסה אנליטית, אנליזה של פונקציות, חשבון דיפרנציאלי, טריגונומטריה, גאומטריה אוקלידית.
+כיתה יא: אינדוקציה, נגזרת שנייה, אינטגרל, הסתברות, וקטורים.
+כיתה יב: חרוטים, מעריכיות/לוגריתמים, מרוכבים.
+
+חוקים:
+1. תמיד הסבר בעברית ברורה
+2. השתמש בדוגמאות מהחיים
+3. בנה הסברים צעד אחר צעד
+4. זהה רמת תלמיד והתאם
+5. אחרי הסבר — הצע תרגיל
+6. כשמתאים — השתמש בתגיות גרפים ואנימציות
+
+פורמט HTML:
+
+לשאלת תרגול:
+<div class="quiz"><div class="qlbl">🧮 שאלת תרגול</div><div class="qq">[שאלה]</div><div class="qopts" id="qo-ID"><button class="opt" onclick="ca(this,'A','CORRECT','ID','EXPL')"><span class="ol">א</span>[טקסט]</button><button class="opt" onclick="ca(this,'B','CORRECT','ID','EXPL')"><span class="ol">ב</span>[טקסט]</button><button class="opt" onclick="ca(this,'C','CORRECT','ID','EXPL')"><span class="ol">ג</span>[טקסט]</button><button class="opt" onclick="ca(this,'D','CORRECT','ID','EXPL')"><span class="ol">ד</span>[טקסט]</button></div><div class="fb" id="fb-ID"></div></div>
+החלף ID במספר ייחודי, CORRECT באות הנכונה (A/B/C/D), EXPL בהסבר קצר.
+
+לנוסחה: <div class="formula">[נוסחה]</div>
+לכרטיס: <div class="card"><div class="card-label">[כותרת]</div>[תוכן]</div>
+לצעדים: <div class="steps"><div class="step"><div class="stepn">1</div><div class="stept">[תוכן]</div></div></div>
+לרמז: <div class="hint"><span>💡</span><div class="hintt">[טקסט]</div></div>
+לבגרות: <div class="bagrut"><div class="blbl">📋 שאלת בגרות</div><div class="bpts">[X] נקודות</div><div class="bq">[שאלה]</div>[פתרון]</div>
+
+לגרף/אנימציה — השתמש בתגיות מיוחדות:
+[CANVAS:derivative_interactive] — אנימציית נגזרת
+[CANVAS:trig_unit_circle] — מעגל יחידה אנימציה
+[CANVAS:integral_area] — שטח תחת גרף
+[CANVAS:parabola_interactive] — פרבולה אינטראקטיבית
+[CANVAS:sequences_vis] — ויזואליזציה סדרות
+[CANVAS:function_transform] — טרנספורמציות פונקציה
+[CHART:sequences_bar:a,d,n] — גרף סדרה (החלף בערכים)
+[CHART:function_line:type] — גרף פונקציה
+
+השתמש בנוסחאות LaTeX: $...$ אינליין, $$...$$ בשורה.`;
+
+// ══════════════════════════════════════════
+// CANVAS ANIMATIONS
+// ══════════════════════════════════════════
+
+// ── 1. Derivative: animated tangent line ──
+function drawDerivativeAnim(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t = 0, animId;
+
+  function f(x) { return 0.3*x*x - 0.5*x + 1; }
+  function df(x) { return 0.6*x - 0.5; }
+
+  // coordinate transform
+  const ox = W/2 - 40, oy = H/2 + 20, sc = 60;
+  function tx(x){ return ox + x*sc; }
+  function ty(y){ return oy - y*sc; }
+  function fx(px){ return (px - ox)/sc; }
+
+  function draw(x0) {
+    ctx.clearRect(0,0,W,H);
+    // background
+    ctx.fillStyle = '#0d1117'; ctx.fillRect(0,0,W,H);
+
+    // grid
+    ctx.strokeStyle='rgba(59,130,246,0.08)'; ctx.lineWidth=1;
+    for(let i=-5;i<=5;i++){
+      ctx.beginPath();ctx.moveTo(tx(i),0);ctx.lineTo(tx(i),H);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,ty(i));ctx.lineTo(W,ty(i));ctx.stroke();
+    }
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+
+    // axis labels
+    ctx.fillStyle='rgba(148,163,184,0.6)';ctx.font='10px Heebo';ctx.textAlign='center';
+    for(let i=-3;i<=3;i++){
+      if(i!==0){
+        ctx.fillText(i,tx(i),oy+14);
+        ctx.fillText(i,ox-14,ty(i)+4);
+      }
+    }
+    ctx.fillStyle='rgba(148,163,184,0.8)';ctx.font='12px Heebo';
+    ctx.fillText('x',W-15,oy-8);
+    ctx.fillText('y',ox+10,12);
+
+    // function curve
+    ctx.strokeStyle='#3b82f6'; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    for(let px=0;px<=W;px++){
+      const x=fx(px);
+      const y=f(x);
+      if(px===0)ctx.moveTo(px,ty(y));
+      else ctx.lineTo(px,ty(y));
+    }
+    ctx.stroke();
+
+    // tangent line
+    const slope = df(x0);
+    const y0 = f(x0);
+    const x1 = x0-2.5, x2 = x0+2.5;
+    ctx.strokeStyle='#f59e0b'; ctx.lineWidth=2;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(tx(x1), ty(y0 + slope*(x1-x0)));
+    ctx.lineTo(tx(x2), ty(y0 + slope*(x2-x0)));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // point on curve
+    ctx.fillStyle='#8b5cf6';
+    ctx.beginPath();ctx.arc(tx(x0),ty(y0),6,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();
+
+    // label
+    ctx.fillStyle='white';ctx.font='bold 13px Heebo';ctx.textAlign='right';
+    ctx.fillText(`x₀ = ${x0.toFixed(2)}`,W-16,24);
+    ctx.fillStyle='#f59e0b';
+    ctx.fillText(`f'(x₀) = ${slope.toFixed(2)}`,W-16,42);
+    ctx.fillStyle='#3b82f6';
+    ctx.fillText(`f(x) = 0.3x² - 0.5x + 1`,W-16,60);
+  }
+
+  // Auto animate
+  function animate() {
+    const x0 = 2.5 * Math.sin(t) ;
+    draw(x0);
+    t += 0.025;
+    animId = requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Drag to set x
+  let dragging=false;
+  canvas.addEventListener('mousedown',()=>dragging=true);
+  canvas.addEventListener('mouseup',()=>dragging=false);
+  canvas.addEventListener('mousemove',(e)=>{
+    if(!dragging)return;
+    cancelAnimationFrame(animId);
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    draw(fx(mx));
+  });
+  canvas.addEventListener('touchmove',(e)=>{
+    e.preventDefault();
+    cancelAnimationFrame(animId);
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.touches[0].clientX-rect.left;
+    draw(fx(mx));
+  },{passive:false});
+
+  return ()=>cancelAnimationFrame(animId);
+}
+
+// ── 2. Trig: unit circle animation ──
+function drawTrigAnim(canvas) {
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const cx=W/2-60, cy=H/2, R=Math.min(W,H)*0.38;
+  let angle=0, animId, paused=false;
+
+  function draw(a) {
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    // unit circle
+    ctx.strokeStyle='rgba(59,130,246,0.3)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy,R,0,2*Math.PI);ctx.stroke();
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(cx-R-20,cy);ctx.lineTo(cx+R+20,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy-R-20);ctx.lineTo(cx,cy+R+20);ctx.stroke();
+
+    // axis labels
+    ctx.fillStyle='rgba(148,163,184,0.7)';ctx.font='11px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText('1',cx+R+6,cy-6);ctx.fillText('-1',cx-R-8,cy-6);
+    ctx.fillText('1',cx+6,cy-R-6);ctx.fillText('-1',cx+6,cy+R+10);
+
+    const px=cx+R*Math.cos(a), py=cy-R*Math.sin(a);
+
+    // sin line (vertical, red)
+    ctx.strokeStyle='#ef4444';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,cy);ctx.stroke();
+
+    // cos line (horizontal, green)
+    ctx.strokeStyle='#10b981';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,cy);ctx.stroke();
+
+    // radius
+    ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.stroke();
+
+    // angle arc
+    ctx.strokeStyle='rgba(139,92,246,0.5)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy,30,0,-a,a<0);ctx.stroke();
+
+    // point
+    ctx.fillStyle='white';ctx.beginPath();ctx.arc(px,py,7,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(px,py,5,0,2*Math.PI);ctx.fill();
+
+    // labels
+    const deg=(a*180/Math.PI+360)%360;
+    ctx.font='bold 14px Heebo';ctx.textAlign='left';
+    const lx=cx+R+30;
+    ctx.fillStyle='white';   ctx.fillText(`θ = ${deg.toFixed(0)}°`,lx,cy-70);
+    ctx.fillStyle='#ef4444'; ctx.fillText(`sin θ = ${Math.sin(a).toFixed(3)}`,lx,cy-48);
+    ctx.fillStyle='#10b981'; ctx.fillText(`cos θ = ${Math.cos(a).toFixed(3)}`,lx,cy-26);
+    ctx.fillStyle='#8b5cf6'; ctx.fillText(`tan θ = ${Math.abs(Math.cos(a))>0.01?Math.tan(a).toFixed(3):'∞'}`,lx,cy-4);
+
+    // sin wave preview (mini)
+    ctx.strokeStyle='rgba(239,68,68,0.5)';ctx.lineWidth=1.5;
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const ta=i*Math.PI*2/100;
+      const wx=lx + (i/200)*120;
+      const wy=cy+60 - Math.sin(ta)*25;
+      i===0?ctx.moveTo(wx,wy):ctx.lineTo(wx,wy);
+    }
+    ctx.stroke();
+    // moving dot on wave
+    const wdotX=lx + (((a%(2*Math.PI))+2*Math.PI)%(2*Math.PI))/(2*Math.PI)*120;
+    const wdotY=cy+60 - Math.sin(a)*25;
+    ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(wdotX,wdotY,4,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle='rgba(148,163,184,0.5)';ctx.font='10px Heebo';ctx.textAlign='left';
+    ctx.fillText('sin(θ)',lx,cy+95);
+  }
+
+  function animate(){ draw(angle); angle+=0.025; animId=requestAnimationFrame(animate); }
+  animate();
+
+  canvas.addEventListener('click',()=>{ paused=!paused; paused?cancelAnimationFrame(animId):animate(); });
+  return ()=>cancelAnimationFrame(animId);
+}
+
+// ── 3. Integral: area under curve ──
+function drawIntegralAnim(canvas) {
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let nRects=4,animId;
+  const ox=60,oy=H-50,sc=70;
+
+  function f(x){return -0.4*(x-1)*(x-4)+2.5;}
+  function tx(x){return ox+x*sc;}
+  function ty(y){return oy-y*sc;}
+
+  const a=0.5,b=4.5;
+
+  function draw(n) {
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(ox-10,oy);ctx.lineTo(W-20,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,10);ctx.lineTo(ox,oy+10);ctx.stroke();
+
+    const dw=(b-a)/n;
+    let approxArea=0;
+    // riemann rectangles
+    for(let i=0;i<n;i++){
+      const xi=a+i*dw;
+      const yi=f(xi+dw/2);
+      approxArea+=yi*dw;
+      const px=tx(xi),py=ty(Math.max(0,yi));
+      const pw=dw*sc,ph=Math.abs(ty(0)-ty(yi));
+      ctx.fillStyle=`rgba(59,130,246,${0.25+0.1*(i%2)})`;
+      ctx.fillRect(px,py,pw,ph);
+      ctx.strokeStyle='rgba(59,130,246,0.5)';ctx.lineWidth=1;
+      ctx.strokeRect(px,py,pw,ph);
+    }
+
+    // true area (approx with trapezoids)
+    let trueArea=0;
+    const steps=200;
+    for(let i=0;i<steps;i++){trueArea+=f(a+(b-a)*(i+0.5)/steps)*(b-a)/steps;}
+
+    // curve
+    ctx.strokeStyle='#3b82f6';ctx.lineWidth=3;
+    ctx.beginPath();
+    for(let x=a-0.2;x<=b+0.2;x+=0.01){
+      const y=f(x);
+      const px=tx(x),py=ty(y);
+      x<=a-0.19?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+
+    // labels
+    ctx.fillStyle='white';ctx.font='bold 14px Heebo';ctx.textAlign='left';
+    ctx.fillText(`n = ${n} מלבנים`,16,26);
+    ctx.fillStyle='#3b82f6';
+    ctx.fillText(`שטח אמיתי ≈ ${trueArea.toFixed(3)}`,16,46);
+    ctx.fillStyle='#f59e0b';
+    ctx.fillText(`קירוב רימן = ${approxArea.toFixed(3)}`,16,66);
+    const err=Math.abs(trueArea-approxArea)/trueArea*100;
+    ctx.fillStyle=err<2?'#10b981':'#ef4444';
+    ctx.fillText(`שגיאה: ${err.toFixed(1)}%`,16,86);
+    ctx.fillStyle='rgba(148,163,184,0.6)';ctx.font='11px Heebo';
+    ctx.fillText('f(x) = -0.4(x-1)(x-4)+2.5',16,H-15);
+
+    // axis numbers
+    ctx.fillStyle='rgba(148,163,184,0.6)';ctx.font='11px Heebo';ctx.textAlign='center';
+    for(let i=0;i<=5;i++){ctx.fillText(i,tx(i),oy+16);}
+  }
+
+  draw(nRects);
+
+  return {
+    setRects: (n)=>{ nRects=n; draw(n); }
+  };
+}
+
+// ── 4. Parabola interactive ──
+function drawParabolaAnim(canvas) {
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const ox=W/2,oy=H/2,sc=45;
+
+  function tx(x){return ox+x*sc;}
+  function ty(y){return oy-y*sc;}
+
+  let a=1,b=0,c=0;
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    // grid
+    ctx.strokeStyle='rgba(59,130,246,0.06)';ctx.lineWidth=1;
+    for(let i=-6;i<=6;i++){
+      ctx.beginPath();ctx.moveTo(tx(i),0);ctx.lineTo(tx(i),H);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,ty(i));ctx.lineTo(W,ty(i));ctx.stroke();
+    }
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+
+    // axis labels
+    ctx.fillStyle='rgba(148,163,184,0.5)';ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+    for(let i=-5;i<=5;i++){
+      if(i!==0){ctx.fillText(i,tx(i),oy+14);ctx.fillText(i,ox+10,ty(i)+4);}
+    }
+
+    // parabola
+    const disc=b*b-4*a*c;
+    ctx.strokeStyle='#8b5cf6';ctx.lineWidth=2.5;
+    ctx.beginPath();
+    for(let px=0;px<=W;px++){
+      const x=(px-ox)/sc;
+      const y=a*x*x+b*x+c;
+      if(Math.abs(y)>12)continue;
+      px===0?ctx.moveTo(px,ty(y)):ctx.lineTo(px,ty(y));
+    }
+    ctx.stroke();
+
+    // vertex
+    const vx=-b/(2*a);
+    const vy=a*vx*vx+b*vx+c;
+    if(Math.abs(vy)<10){
+      ctx.fillStyle='#f59e0b';
+      ctx.beginPath();ctx.arc(tx(vx),ty(vy),7,0,2*Math.PI);ctx.fill();
+      ctx.fillStyle='white';ctx.font='11px Heebo';ctx.textAlign='left';
+      ctx.fillText(`קודקוד (${vx.toFixed(1)}, ${vy.toFixed(1)})`,tx(vx)+10,ty(vy)-5);
+    }
+
+    // roots
+    if(disc>=0){
+      const r1=(-b+Math.sqrt(disc))/(2*a);
+      const r2=(-b-Math.sqrt(disc))/(2*a);
+      ctx.fillStyle='#10b981';
+      [r1,r2].forEach(r=>{
+        ctx.beginPath();ctx.arc(tx(r),oy,6,0,2*Math.PI);ctx.fill();
+      });
+    }
+
+    // formula display
+    ctx.fillStyle='white';ctx.font='bold 14px Heebo';ctx.textAlign='right';
+    const sign_b=b>=0?'+':'-', sign_c=c>=0?'+':'-';
+    ctx.fillText(`f(x) = ${a}x² ${sign_b} ${Math.abs(b)}x ${sign_c} ${Math.abs(c)}`,W-16,24);
+    ctx.fillStyle='#f59e0b';
+    ctx.fillText(`קודקוד: x = ${vx.toFixed(2)}`,W-16,46);
+    ctx.fillStyle='#10b981';
+    ctx.fillText(disc>=0?`שורשים: ${((-b+Math.sqrt(disc))/(2*a)).toFixed(2)}, ${((-b-Math.sqrt(disc))/(2*a)).toFixed(2)}`:'אין שורשים ממשיים',W-16,66);
+    ctx.fillStyle='rgba(148,163,184,0.6)';
+    ctx.fillText(`Δ = b²-4ac = ${disc.toFixed(1)}`,W-16,86);
+  }
+
+  draw();
+  return { setA:(v)=>{a=v;draw();}, setB:(v)=>{b=v;draw();}, setC:(v)=>{c=v;draw();} };
+}
+
+// ── 5. Sequences bar chart via Chart.js ──
+function drawSequencesChart(container, a1=2, d=3, n=10) {
+  const existing = container.querySelector('canvas');
+  if(existing) existing.remove();
+  const canvas=document.createElement('canvas');
+  canvas.style.maxHeight='220px';
+  container.appendChild(canvas);
+
+  const labels=[],arith=[],geo=[],q=parseFloat(d)||1.3;
+  for(let i=1;i<=n;i++){
+    labels.push(`a${i}`);
+    arith.push(a1+(i-1)*d);
+    geo.push(a1*Math.pow(q,i-1));
+  }
+
+  const id='chart_'+Date.now();
+  if(ST.chartInstances[id]) ST.chartInstances[id].destroy();
+
+  ST.chartInstances[id]=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'חשבונית (d='+d+')',data:arith,backgroundColor:'rgba(59,130,246,0.6)',borderColor:'#3b82f6',borderWidth:1.5,borderRadius:4},
+        {label:'הנדסית (q='+q.toFixed(1)+')',data:geo,backgroundColor:'rgba(139,92,246,0.6)',borderColor:'#8b5cf6',borderWidth:1.5,borderRadius:4,type:'line',tension:0.4,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:'#94a3b8',font:{family:'Heebo',size:11}}}},
+      scales:{
+        x:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.03)'}},
+        y:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.06)'}}
+      }
+    }
+  });
+}
+
+// ── 6. Function transforms ──
+function drawFunctionTransform(canvas) {
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const ox=W/2,oy=H/2,sc=50;
+
+  function tx(x){return ox+x*sc;}
+  function ty(y){return oy-y*sc;}
+
+  let type='quad',shiftH=0,shiftV=0,scaleA=1;
+
+  function baseF(x){
+    if(type==='quad')return x*x;
+    if(type==='sin')return Math.sin(x);
+    if(type==='sqrt')return x>=0?Math.sqrt(x):NaN;
+    return x;
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    ctx.strokeStyle='rgba(59,130,246,0.06)';ctx.lineWidth=1;
+    for(let i=-6;i<=6;i++){
+      ctx.beginPath();ctx.moveTo(tx(i),0);ctx.lineTo(tx(i),H);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,ty(i));ctx.lineTo(W,ty(i));ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+
+    // original (faded)
+    ctx.strokeStyle='rgba(148,163,184,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();
+    for(let px=0;px<=W;px++){
+      const x=(px-ox)/sc;
+      const y=baseF(x);
+      if(isNaN(y)||Math.abs(y)>8)continue;
+      px===0?ctx.moveTo(px,ty(y)):ctx.lineTo(px,ty(y));
+    }
+    ctx.stroke();
+
+    // transformed
+    ctx.strokeStyle='#8b5cf6';ctx.lineWidth=2.5;
+    ctx.beginPath();let first=true;
+    for(let px=0;px<=W;px++){
+      const x=(px-ox)/sc;
+      const y=scaleA*baseF(x-shiftH)+shiftV;
+      if(isNaN(y)||Math.abs(y)>8){first=true;continue;}
+      first?(ctx.moveTo(px,ty(y)),first=false):ctx.lineTo(px,ty(y));
+    }
+    ctx.stroke();
+
+    ctx.fillStyle='white';ctx.font='bold 13px Heebo';ctx.textAlign='right';
+    const fStr=type==='quad'?'x²':type==='sin'?'sin(x)':type==='sqrt'?'√x':'x';
+    const sH=shiftH>=0?`x-${shiftH.toFixed(1)}`:`x+${Math.abs(shiftH).toFixed(1)}`;
+    ctx.fillText(`f(x) = ${scaleA.toFixed(1)}·${fStr.replace('x',sH)}+${shiftV.toFixed(1)}`,W-16,24);
+    ctx.fillStyle='rgba(148,163,184,0.4)';
+    ctx.fillText('— פונקציית בסיס',W-16,44);
+    ctx.fillStyle='#8b5cf6';
+    ctx.fillText('— אחרי טרנספורמציה',W-16,62);
+  }
+
+  draw();
+  return {
+    setType:(v)=>{type=v;draw();},
+    setShiftH:(v)=>{shiftH=v;draw();},
+    setShiftV:(v)=>{shiftV=v;draw();},
+    setScaleA:(v)=>{scaleA=v;draw();}
+  };
+}
+
+// ══════════════════════════════════════════
+// BUILD VISUAL ELEMENTS IN CHAT
+// ══════════════════════════════════════════
+function buildDerivativeBlock() {
+  const div=document.createElement('div');
+  div.className='canvas-wrap';
+  div.innerHTML=`
+    <div class="canvas-title">🎬 אנימציה: נגזרת כשיפוע המשיק — גרור לשינוי!</div>
+    <canvas width="520" height="280" style="width:100%;cursor:crosshair"></canvas>
+    <div class="canvas-controls">
+      <span style="font-size:12px;color:var(--t2)">גרור על הגרף לבחירת נקודה, או צפה באנימציה אוטומטית</span>
+    </div>
+  `;
+  return div;
+}
+
+function buildTrigBlock() {
+  const div=document.createElement('div');
+  div.className='canvas-wrap';
+  div.innerHTML=`
+    <div class="canvas-title">⭕ מעגל היחידה — לחץ להפסקה/המשך</div>
+    <canvas width="520" height="280" style="width:100%;cursor:pointer"></canvas>
+    <div class="canvas-controls">
+      <span style="font-size:12px;color:var(--t2)">לחץ להפסקה · הנקודה הכתומה נעה על המעגל</span>
+    </div>
+  `;
+  return div;
+}
+
+function buildIntegralBlock() {
+  const div=document.createElement('div');
+  div.className='canvas-wrap';
+  const cid='intctrl'+Date.now();
+  div.innerHTML=`
+    <div class="canvas-title">∫ שטח תחת הגרף — סכומי רימן</div>
+    <canvas width="520" height="260" style="width:100%"></canvas>
+    <div class="param-row">
+      <label>מספר מלבנים:</label>
+      <input type="range" min="1" max="50" value="4" id="${cid}" oninput="document.getElementById('${cid}v').textContent=this.value">
+      <span class="param-val" id="${cid}v">4</span>
+    </div>
+  `;
+  return {div,cid};
+}
+
+function buildParabolaBlock() {
+  const div=document.createElement('div');
+  div.className='canvas-wrap';
+  const pid='par'+Date.now();
+  div.innerHTML=`
+    <div class="canvas-title">🔵 פרבולה אינטראקטיבית: f(x) = ax² + bx + c</div>
+    <canvas width="520" height="300" style="width:100%"></canvas>
+    <div class="param-row"><label>a:</label><input type="range" min="-3" max="3" step="0.1" value="1" id="${pid}a" oninput="document.getElementById('${pid}av').textContent=this.value"><span class="param-val" id="${pid}av">1</span></div>
+    <div class="param-row"><label>b:</label><input type="range" min="-5" max="5" step="0.1" value="0" id="${pid}b" oninput="document.getElementById('${pid}bv').textContent=this.value"><span class="param-val" id="${pid}bv">0</span></div>
+    <div class="param-row"><label>c:</label><input type="range" min="-5" max="5" step="0.1" value="0" id="${pid}c" oninput="document.getElementById('${pid}cv').textContent=this.value"><span class="param-val" id="${pid}cv">0</span></div>
+  `;
+  return {div,pid};
+}
+
+function buildSeqChartBlock() {
+  const div=document.createElement('div');
+  div.className='chart-wrap';
+  const sid='seq'+Date.now();
+  div.innerHTML=`
+    <div class="chart-title">📊 השוואה: סדרה חשבונית מול הנדסית</div>
+    <div id="${sid}chart"></div>
+    <div class="param-row" style="margin-top:10px"><label>a₁:</label><input type="range" min="1" max="10" value="2" id="${sid}a1" oninput="document.getElementById('${sid}a1v').textContent=this.value"><span class="param-val" id="${sid}a1v">2</span></div>
+    <div class="param-row"><label>d (חשבונית):</label><input type="range" min="0.5" max="5" step="0.5" value="3" id="${sid}d" oninput="document.getElementById('${sid}dv').textContent=this.value"><span class="param-val" id="${sid}dv">3</span></div>
+    <div class="param-row"><label>n (מספר איברים):</label><input type="range" min="4" max="15" value="8" id="${sid}n" oninput="document.getElementById('${sid}nv').textContent=this.value"><span class="param-val" id="${sid}nv">8</span></div>
+  `;
+  return {div,sid};
+}
+
+function buildFuncTransformBlock() {
+  const div=document.createElement('div');
+  div.className='canvas-wrap';
+  const fid='ft'+Date.now();
+  div.innerHTML=`
+    <div class="canvas-title">📊 טרנספורמציות על פונקציה: f(a·(x-h))+k</div>
+    <canvas width="520" height="300" style="width:100%"></canvas>
+    <div class="canvas-controls">
+      <button class="ctrl-btn active-ctrl" onclick="ftSetType(this,'${fid}','quad')">x²</button>
+      <button class="ctrl-btn" onclick="ftSetType(this,'${fid}','sin')">sin(x)</button>
+      <button class="ctrl-btn" onclick="ftSetType(this,'${fid}','sqrt')">√x</button>
+    </div>
+    <div class="param-row"><label>a (מתיחה):</label><input type="range" min="-3" max="3" step="0.1" value="1" id="${fid}a" oninput="document.getElementById('${fid}av').textContent=this.value"><span class="param-val" id="${fid}av">1</span></div>
+    <div class="param-row"><label>h (הזזה אופקית):</label><input type="range" min="-3" max="3" step="0.1" value="0" id="${fid}h" oninput="document.getElementById('${fid}hv').textContent=this.value"><span class="param-val" id="${fid}hv">0</span></div>
+    <div class="param-row"><label>k (הזזה אנכית):</label><input type="range" min="-3" max="3" step="0.1" value="0" id="${fid}k" oninput="document.getElementById('${fid}kv').textContent=this.value"><span class="param-val" id="${fid}kv">0</span></div>
+  `;
+  return {div,fid};
+}
+
+// Global ft controllers map
+const FT_CONTROLLERS = {};
+
+function ftSetType(btn,fid,type) {
+  btn.closest('.canvas-controls').querySelectorAll('.ctrl-btn').forEach(b=>b.classList.remove('active-ctrl'));
+  btn.classList.add('active-ctrl');
+  if(FT_CONTROLLERS[fid]) FT_CONTROLLERS[fid].setType(type);
+}
+
+// ══════════════════════════════════════════
+// showViz: insert visual into chat
+// ══════════════════════════════════════════
+function showViz(type) {
+  const cs=document.getElementById('cs');
+  const msgDiv=document.createElement('div');
+  msgDiv.className='msg bot';
+  msgDiv.style.animation='rise .35s ease both';
+  const av=document.createElement('div');av.className='av';av.textContent='🎓';
+  const bub=document.createElement('div');bub.className='bub';
+  msgDiv.appendChild(av);msgDiv.appendChild(bub);cs.appendChild(msgDiv);
+
+  if(type==='derivative_anim'){
+    const block=buildDerivativeBlock();
+    bub.innerHTML='<strong>אנימציה: נגזרת כשיפוע המשיק</strong><br><small style="color:var(--t2)">הקו הצהוב הוא המשיק לגרף הכחול. ראה איך השיפוע שלו (= הנגזרת) משתנה!</small>';
+    bub.appendChild(block);
+    setTimeout(()=>{const canvas=block.querySelector('canvas');drawDerivativeAnim(canvas);},100);
+
+  } else if(type==='trig_anim'){
+    const block=buildTrigBlock();
+    bub.innerHTML='<strong>מעגל היחידה — הגדרת sin, cos, tan</strong><br><small style="color:var(--t2)">הנקודה הכתומה נעה על המעגל. השורות האדומה/ירוקה מציגות את sin ו-cos.</small>';
+    bub.appendChild(block);
+    setTimeout(()=>{const canvas=block.querySelector('canvas');drawTrigAnim(canvas);},100);
+
+  } else if(type==='integral_anim'){
+    const {div,cid}=buildIntegralBlock();
+    bub.innerHTML='<strong>שטח תחת גרף — סכומי רימן</strong><br><small style="color:var(--t2)">הזז את הסליידר לראות כיצד יותר מלבנים → קירוב מדויק יותר לשטח האמיתי</small>';
+    bub.appendChild(div);
+    setTimeout(()=>{
+      const canvas=div.querySelector('canvas');
+      const ctrl=drawIntegralAnim(canvas);
+      const slider=document.getElementById(cid);
+      if(slider) slider.addEventListener('input',()=>ctrl.setRects(parseInt(slider.value)));
+    },100);
+
+  } else if(type==='parabola_interactive'){
+    const {div,pid}=buildParabolaBlock();
+    bub.innerHTML='<strong>פרבולה אינטראקטיבית: f(x) = ax² + bx + c</strong><br><small style="color:var(--t2)">שנה את המקדמים וראה מיידית את הקודקוד, השורשים ודיסקרימיננטה</small>';
+    bub.appendChild(div);
+    setTimeout(()=>{
+      const canvas=div.querySelector('canvas');
+      const ctrl=drawParabolaAnim(canvas);
+      document.getElementById(pid+'a').addEventListener('input',e=>ctrl.setA(parseFloat(e.target.value)));
+      document.getElementById(pid+'b').addEventListener('input',e=>ctrl.setB(parseFloat(e.target.value)));
+      document.getElementById(pid+'c').addEventListener('input',e=>ctrl.setC(parseFloat(e.target.value)));
+    },100);
+
+  } else if(type==='sequences_chart'){
+    const {div,sid}=buildSeqChartBlock();
+    bub.innerHTML='<strong>גרף: השוואת סדרות חשבוניות והנדסיות</strong><br><small style="color:var(--t2)">שנה את הפרמטרים וראה את ההבדל בקצב גדילה</small>';
+    bub.appendChild(div);
+    setTimeout(()=>{
+      const chartDiv=document.getElementById(sid+'chart');
+      drawSequencesChart(chartDiv, 2, 3, 8);
+      function update(){
+        const a1=parseFloat(document.getElementById(sid+'a1').value);
+        const d=parseFloat(document.getElementById(sid+'d').value);
+        const n=parseInt(document.getElementById(sid+'n').value);
+        drawSequencesChart(chartDiv,a1,d,n);
+      }
+      document.getElementById(sid+'a1').addEventListener('input',update);
+      document.getElementById(sid+'d').addEventListener('input',update);
+      document.getElementById(sid+'n').addEventListener('input',update);
+    },100);
+
+  } else if(type==='function_transform'){
+    const {div,fid}=buildFuncTransformBlock();
+    bub.innerHTML='<strong>טרנספורמציות על פונקציה</strong><br><small style="color:var(--t2)">ראה כיצד הזזה, מתיחה ושיקוף משפיעים על הגרף — אפור = בסיס, סגול = אחרי שינוי</small>';
+    bub.appendChild(div);
+    setTimeout(()=>{
+      const canvas=div.querySelector('canvas');
+      const ctrl=drawFunctionTransform(canvas);
+      FT_CONTROLLERS[fid]=ctrl;
+      document.getElementById(fid+'a').addEventListener('input',e=>ctrl.setScaleA(parseFloat(e.target.value)));
+      document.getElementById(fid+'h').addEventListener('input',e=>ctrl.setShiftH(parseFloat(e.target.value)));
+      document.getElementById(fid+'k').addEventListener('input',e=>ctrl.setShiftV(parseFloat(e.target.value)));
+    },100);
+  }
+
+  scrollB();
+}
+
+// ══════════════════════════════════════════
+// showVideo: embed YouTube in chat
+// ══════════════════════════════════════════
+function showVideo(key) {
+  const v=VIDEOS[key];
+  if(!v)return;
+  const cs=document.getElementById('cs');
+  const msgDiv=document.createElement('div');
+  msgDiv.className='msg bot';
+  msgDiv.style.animation='rise .35s ease both';
+  const av=document.createElement('div');av.className='av';av.textContent='🎓';
+  const bub=document.createElement('div');bub.className='bub';
+
+  bub.innerHTML=`
+    <strong>סרטון הסבר מומלץ</strong>
+    <div class="yt-wrap" style="margin-top:10px">
+      <div class="yt-header">
+        <div class="yt-icon">▶</div>
+        <div class="yt-info">
+          <div class="yt-title">${v.title}</div>
+          <div class="yt-sub">${v.sub}</div>
+        </div>
+      </div>
+      <iframe class="yt-iframe"
+        src="https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1"
+        title="${v.title}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="hint" style="margin-top:8px"><span>💡</span><div class="hintt">${v.desc}</div></div>
+  `;
+
+  msgDiv.appendChild(av);msgDiv.appendChild(bub);
+  cs.appendChild(msgDiv);scrollB();
+}
+
+// ══════════════════════════════════════════
+// PARSE [CANVAS:...] and [CHART:...] tags in AI response
+// ══════════════════════════════════════════
+function parseAndRenderVisuals(bub) {
+  const html = bub.innerHTML;
+
+  // replace [CANVAS:type] with actual canvas
+  const canvasMatches = [...html.matchAll(/\[CANVAS:([a-z_]+)\]/g)];
+  if(canvasMatches.length===0) return;
+
+  let newHtml = html;
+  canvasMatches.forEach(m => {
+    const type = m[1];
+    newHtml = newHtml.replace(m[0], `<div class="vizplaceholder" data-viz="${type}"></div>`);
+  });
+  bub.innerHTML = newHtml;
+
+  // Now render each placeholder
+  bub.querySelectorAll('.vizplaceholder').forEach(ph => {
+    const type = ph.getAttribute('data-viz');
+    const cs = document.getElementById('cs');
+
+    // Create a mini message for the visual
+    setTimeout(()=>{
+      const vtype = type==='derivative_interactive'?'derivative_anim':
+                    type==='trig_unit_circle'?'trig_anim':
+                    type==='integral_area'?'integral_anim':
+                    type==='parabola_interactive'?'parabola_interactive':
+                    type==='sequences_vis'?'sequences_chart':
+                    type==='function_transform'?'function_transform':'derivative_anim';
+      // Insert a simple inline version
+      ph.innerHTML='<em style="color:var(--cyan);font-size:12px">⬇ ויזואליזציה נטענת...</em>';
+      setTimeout(()=>{ showViz(vtype); ph.remove(); },300);
+    },200);
+  });
+}
+
+// ══════════════════════════════════════════
+// STANDARD UI
+// ══════════════════════════════════════════
+const TOPICS={
+  sequences_arith:'הסבר לי סדרה חשבונית עם גרף ודוגמאות. השתמש בגרף ויזואלי אם אפשר.',
+  sequences_geo:'הסבר לי סדרה הנדסית: הגדרה, מנה, סכום אינסוף. תן דוגמה של ריבית.',
+  analytic_intro:'הסבר לי מבוא להנדסה אנליטית: ישרים, מרחקים, מעגל.',
+  functions_intro:'הסבר לי מבוא לאנליזה: סוגי פונקציות, פעולות, טרנספורמציות.',
+  derivative_basic:'הסבר לי נגזרת מהיסוד עם גרף ואנימציה.',
+  trig_intro:'הסבר לי פונקציות טריגונומטריות עם מעגל היחידה.',
+  geometry_y10:'הסבר לי גאומטריה: מקומות גאומטריים, מעגל, דמיון.',
+  derivative_adv:'הסבר לי נגזרת שנייה, קעירות ונקודות פיתול.',
+  integral:'הסבר לי אינטגרל מסוים עם הסבר ויזואלי של שטח.',
+  probability:'הסבר לי הסתברות: מותנית, ברנולי, עץ.',
+  vectors:'הסבר לי וקטורים: פעולות, מכפלה סקלרית, זוויות.',
+  conics:'הסבר לי פרבולה, אליפסה והיפרבולה.',
+  exp_log:'הסבר לי מעריכיות ולוגריתמים.',
+  complex:'הסבר לי מספרים מרוכבים.',
+  bagrut:'תן לי שאלת בגרות עם פתרון מלא.',
+  diagnose:'אבחן את הרמה שלי עם 5 שאלות.'
+};
+
+function ag(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px'}
+function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function scrollB(){const c=document.getElementById('cs');setTimeout(()=>c.scrollTo({top:c.scrollHeight,behavior:'smooth'}),80);}
+
+function addMsg(role,html){
+  const c=document.getElementById('cs');
+  const d=document.createElement('div');d.className='msg '+role;
+  const a=document.createElement('div');a.className='av';a.textContent=role==='bot'?'🎓':'👤';
+  const b=document.createElement('div');b.className='bub';b.innerHTML=html;
+  d.appendChild(a);d.appendChild(b);c.appendChild(d);scrollB();
+  if(role==='bot') parseAndRenderVisuals(b);
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([b]).catch(()=>{});
+  return b;
+}
+
+function showTyping(){
+  const c=document.getElementById('cs');
+  const d=document.createElement('div');d.className='msg bot';d.id='ty';
+  const a=document.createElement('div');a.className='av';a.textContent='🎓';
+  const b=document.createElement('div');b.className='bub';
+  b.innerHTML='<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+  d.appendChild(a);d.appendChild(b);c.appendChild(d);scrollB();
+}
+function hideTyping(){const t=document.getElementById('ty');if(t)t.remove();}
+
+function addPts(n){
+  ST.pts+=n;ST.streak++;
+  document.getElementById('pp').textContent=ST.pts+' נק\'';
+  document.getElementById('ps').textContent='🔥 '+ST.streak+' רצף';
+  document.getElementById('pf').style.width=Math.min(ST.pts/500*100,100)+'%';
+  const lvls=['מתחיל','בסיסי','בינוני','מתקדם','מומחה'];
+  document.getElementById('lvl').textContent=lvls[Math.min(Math.floor(ST.pts/100),4)];
+}
+function resetS(){ST.streak=0;document.getElementById('ps').textContent='🔥 0 רצף';}
+
+function ca(btn,chosen,correct,id,expl){
+  document.querySelectorAll('#qo-'+id+' .opt').forEach(o=>o.disabled=true);
+  const fb=document.getElementById('fb-'+id);
+  if(chosen===correct){
+    btn.classList.add('ok');fb.className='fb ok';
+    fb.innerHTML='✅ <strong>כל הכבוד!</strong> '+expl;addPts(20);
+  } else {
+    btn.classList.add('bad');
+    document.querySelectorAll('#qo-'+id+' .opt').forEach(o=>{
+      if(o.getAttribute('onclick')&&o.getAttribute('onclick').includes("'"+correct+"'"))o.classList.add('ok');
+    });
+    fb.className='fb bad';fb.innerHTML='❌ <strong>לא נכון.</strong> '+expl;resetS();
+  }
+}
+
+function topicClick(el,key){
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('act'));
+  el.classList.add('act');
+  sendMsg(TOPICS[key]||'הסבר לי על הנושא');
+}
+
+async function sendMsg(override){
+  const inp=document.getElementById('ui');
+  const text=(override||inp.value).trim();
+  if(!text)return;
+  inp.value='';inp.style.height='auto';
+  document.getElementById('sb').disabled=true;
+  addMsg('user',text);showTyping();
+  ST.hist.push({role:'user',content:text});
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1800,
+        system:SYS,
+        messages:ST.hist
+      })
+    });
+    if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    const txt=d.content.map(b=>b.type==='text'?b.text:'').join('');
+    ST.hist.push({role:'assistant',content:txt});
+    if(ST.hist.length>20)ST.hist=ST.hist.slice(-16);
+    hideTyping();addMsg('bot',txt);addPts(5);
+  } catch(err){
+    hideTyping();
+    addMsg('bot','<div class="hint"><span>⚠️</span><div class="hintt">שגיאת חיבור. נסה שוב.</div></div>');
+  }
+  document.getElementById('sb').disabled=false;
+  document.getElementById('ui').focus();
+}
+</script>
+</body>
+</html>
